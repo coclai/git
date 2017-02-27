@@ -891,4 +891,20 @@ test_expect_success 'stash without verb with pathspec' '
 	test_path_is_file bar
 '
 
+test_expect_success 'stash with pathspec matching multiple paths' '
+	echo original >file &&
+	echo original >other-file &&
+	git commit -m "two" file other-file &&
+	echo modified >file &&
+	echo modified >other-file &&
+	git stash -- "*file" &&
+	echo original >expect &&
+	test_cmp expect file &&
+	test_cmp expect other-file &&
+	git stash pop &&
+	echo modified >expect &&
+	test_cmp expect file &&
+	test_cmp expect other-file
+'
+
 test_done

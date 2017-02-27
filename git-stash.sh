@@ -300,7 +300,8 @@ push_stash () {
 		if test $# != 0
 		then
 			git reset ${GIT_QUIET:+-q} -- "$@"
-			git checkout ${GIT_QUIET:+-q} HEAD -- $(git ls-files -z --modified "$@")
+			git ls-files -z --modified -- "$@" |
+			git checkout-index -z --force --stdin
 			git clean --force ${GIT_QUIET:+-q} -d -- "$@"
 		else
 			git reset --hard ${GIT_QUIET:+-q}
